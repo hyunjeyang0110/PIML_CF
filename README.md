@@ -10,7 +10,7 @@ This repository provides deep learning model architectures and implementation co
 - **How** physics constraints improve model behavior: mechanisms underlying physically consistent predictions
 
 <p align="center">
-  <img src="figures/PIML_CF overview.png" width="600">
+  <img src="figures/PIML_CF overview.png" width="800">
 </p>
 
 ## Key Features
