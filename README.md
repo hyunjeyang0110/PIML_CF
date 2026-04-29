@@ -2,7 +2,7 @@
 Physics-Informed Deep Learning for Hurricane-Induced Compound Flooding Prediction
 
 ## Overview
-This repository provides deep learning model architectures and implementation code for compound flooding prediction, integrating physical constraints based on the simplified shallow water equations (SSWEs).
+This repository provides deep learning model architectures and implementation code for compound flooding prediction, integrating physical constraints based on the simplified shallow water equations (SSWEs)
 
 <p align="center">
   <img src="figures/PIML_CF overview.png" width="800">
@@ -79,4 +79,4 @@ $$
 
 Hyunje Yang – hyunjeyang@utexas.edu
 
-Distributed under the Creative Commons Legal Code CC0 1.0 Universal. See ``LICENSE`` for more information.
+Distributed under the Creative Commons Legal Code CC0 1.0 Universal. See ``LICENSE`` for more information
