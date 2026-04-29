@@ -54,9 +54,11 @@ $$
 
 - Discretization: Finite Difference Method (FDM)
 
-$$r_v(x, y, t) = \partial_t (hv) + \nabla \cdot (hv\vec{v}) + gh\partial_y(H) - \frac{\tau_{w,y} - \tau_{b,y}}{\rho}$$
+$$\left. \frac{\partial \phi}{\partial t} \right|_t = \frac{\phi^{t+1} - \phi^{t-1}}{2\Delta t}$$
 
-$$r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (hu) + \partial_y (hv) - (P + D) \right)$$
+$$\left. \frac{\partial \phi}{\partial \xi} \right|_{i,j} = \frac{\phi_{i,j+1} - \phi_{i,j-1}}{2\Delta \xi}$$
+
+$$\left. \frac{\partial \phi}{\partial \eta} \right|_{i,j} = \frac{\phi_{i+1,j} - \phi_{i-1,j}}{2\Delta \eta}$$
 
 - Total Loss:
   - Data loss (MSE)
