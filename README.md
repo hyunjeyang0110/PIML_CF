@@ -1,5 +1,5 @@
 # PIML_CF
-This repository provides deep learning model architectures and implementation code for hurricane-induced compound flooding prediction, integrating physics constraints based on the simplified shallow water equations (SSWEs). A minimal example dataset is provided to enable quick testing and verification of the workflow.
+This repository provides deep learning model architectures and implementation code for hurricane-induced compound flooding prediction, integrating physics constraints based on the simplified shallow water equations (SSWEs). To facilitate reproducibility and ease of use, a lightweight example dataset is included to enable end-to-end training of the PIML framework.
 
 > **_Yang et al._**: Where, When, and How Do Physics-Informed Deep Learning Models Improve Hurricane-Induced Compound Flooding Predictions?
 
