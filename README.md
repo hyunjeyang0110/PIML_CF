@@ -34,7 +34,7 @@ This repository provides deep learning model architectures and implementation co
 - Velocity (u, v) at t+1
 
 ## Methods
-- Governing equations: Simplified Shallow Water Equations (SSWEs)
+- Governing equations: simplified shallow water equations (SSWEs)
 - Residuals:
   - x-momentum
   - y-momentum
@@ -49,7 +49,7 @@ r_v(x, y, t) = \partial_t (hv) + \nabla \cdot (hv\vec{v}) + gh\partial_y(H) - \f
 $$
 
 $$
-r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (hu) + \partial_y (hv) - (P + D) \right)
+r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (Hu) + \partial_y (Hv) - (P + D) \right)
 $$
 
 $$
