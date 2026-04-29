@@ -43,7 +43,7 @@ def compute_momentum_loss(input, label,
     label_denorm = fn_denorm2(label, min=output_min_gpu, max=output_max_gpu)
     input_denorm = fn_denorm2(input, min=input_min_gpu, max=input_max_gpu)
 
-    # --- vars_dict 설정 ---
+    # --- Build vars_dict ---
     vars_dict = {
         "t-1": {"h": label_denorm[center_idx - 1, 0], "u": label_denorm[center_idx - 1, 1], "v": label_denorm[center_idx - 1, 2]},
         "t"  : {"h": label_denorm[center_idx,     0], "u": label_denorm[center_idx,     1], "v": label_denorm[center_idx,     2]},
@@ -54,7 +54,7 @@ def compute_momentum_loss(input, label,
     h_t,   u_t,   v_t   = vars_dict["t"]["h"],   vars_dict["t"]["u"],   vars_dict["t"]["v"]
     h_tp1, u_tp1, v_tp1 = vars_dict["t+1"]["h"], vars_dict["t+1"]["u"], vars_dict["t+1"]["v"]
 
-    # --- 상수 추출 ---
+    # --- Extract constants ---
     B = input_denorm[0,17,:,:] 
     sin_theta = torch.sin(torch.deg2rad(torch.tensor(theta, device="cuda")))
     cos_theta = torch.cos(torch.deg2rad(torch.tensor(theta, device="cuda")))
@@ -86,7 +86,8 @@ def compute_momentum_loss(input, label,
     h_threshold = 0.01
     mask_freesurface = ((up > h_threshold) & (down > h_threshold) & (left > h_threshold) & (right > h_threshold)).int()
 
-    dhB_dxi  = torch.clamp((hB[:,2:] - hB[:,:-2]) / (2 * dxi), -10, 10) # clamp를 통해서 기울기 값이 -10 ~ 10 사이만 유지되도록 해서 physics_loss가 폭발하면서 학습 불안정되는 상황을 최소화 한다. 
+    # Clamp slope terms to stabilize training and avoid physics-loss explosion.
+    dhB_dxi  = torch.clamp((hB[:,2:] - hB[:,:-2]) / (2 * dxi), -10, 10)
     dhB_deta = torch.clamp((hB[2:,:] - hB[:-2,:]) / (2 * deta), -10, 10) 
     ghdhB_dx = g * crop_to_594x594(h_t) * ( cos_theta*crop_to_594x594(dhB_dxi) - sin_theta*crop_to_594x594(dhB_deta) ) * mask_freesurface
     ghdhB_dy = g * crop_to_594x594(h_t) * ( sin_theta*crop_to_594x594(dhB_dxi) + cos_theta*crop_to_594x594(dhB_deta) ) * mask_freesurface
@@ -134,7 +135,7 @@ def compute_momentum_loss(input, label,
     dHv_deta = (Hv[2:, :] - Hv[:-2, :]) / (2 * deta)
     dHv_dy = (sin_theta * crop_to_594x594(dHv_dxi) + cos_theta * crop_to_594x594(dHv_deta)) * mask_freesurface
 
-    # --- Source term (단위 변환 포함) ---
+    # --- Source term (including unit conversion) ---
     precipitation = input_denorm[center_idx, 12, :, :] / 1000 / 3600         # [mm/hr → m/s]
     discharge     = input_denorm[center_idx, 16, :, :] / (dxi * deta) / 3600 # [m³/hr → m/s]
     S_mn = crop_to_594x594(precipitation + discharge)                        # Source term [m/s]
@@ -152,14 +153,14 @@ def compute_batch_momentum_loss(input, output,
                                 output_min_gpu, output_max_gpu,
                                 n_gpu):
     """
-    batch 전체에 대해 physics loss 평균을 계산하는 함수.
-    center_idx = 1 ~ batch_size-2 까지 loop를 돌면서 평균냄.
+    Compute mean physics losses over the full batch.
+    Iterates center_idx from 1 to batch_size-2 and averages results.
     """
 
     batch_size = output.shape[0]
     mass_looses, x_losses, y_losses = [], [], []
 
-    for center_idx in range(1, batch_size-1):  # 1 ~ batch_size-2
+    for center_idx in range(1, batch_size-1):
         mass_loss, x_loss, y_loss = compute_momentum_loss(
             input, output,
             input_min_gpu, input_max_gpu,
@@ -171,7 +172,7 @@ def compute_batch_momentum_loss(input, output,
         x_losses.append(x_loss)
         y_losses.append(y_loss)
 
-    # 텐서로 변환 후 평균
+    # Stack tensors and take the mean
     Mass_loss = torch.stack(mass_looses).mean()
     x_momentum_loss = torch.stack(x_losses).mean()
     y_momentum_loss = torch.stack(y_losses).mean()
@@ -185,18 +186,18 @@ def compute_momentum_loss_2d_spatial(input, label,
                                       dt=3600, theta=35, dxi=200, deta=200,
                                       g=9.81, rho=1024, rho_a=1.25):
     """
-    input, label과 scaling 정보, center_idx를 받아서
-    x_momentum_loss와 y_momentum_loss의 2D spatial 분포를 반환하는 함수.
-    
+    Return 2D spatial distributions of x/y momentum residual losses
+    using input, label, scaling info, and center_idx.
+
     Returns:
-        x_loss_2d: (594, 594) 형태의 x momentum loss 2D map
-        y_loss_2d: (594, 594) 형태의 y momentum loss 2D map
+        x_loss_2d: (594, 594) x-momentum loss map
+        y_loss_2d: (594, 594) y-momentum loss map
     """
     # --- Denormalize ---
     label_denorm = fn_denorm2(label, min=output_min_gpu, max=output_max_gpu)
     input_denorm = fn_denorm2(input, min=input_min_gpu, max=input_max_gpu)
 
-    # --- vars_dict 설정 ---
+    # --- Build vars_dict ---
     vars_dict = {
         "t-1": {"h": label_denorm[center_idx - 1, 0], "u": label_denorm[center_idx - 1, 1], "v": label_denorm[center_idx - 1, 2]},
         "t"  : {"h": label_denorm[center_idx,     0], "u": label_denorm[center_idx,     1], "v": label_denorm[center_idx,     2]},
@@ -207,7 +208,7 @@ def compute_momentum_loss_2d_spatial(input, label,
     h_t,   u_t,   v_t   = vars_dict["t"]["h"],   vars_dict["t"]["u"],   vars_dict["t"]["v"]
     h_tp1, u_tp1, v_tp1 = vars_dict["t+1"]["h"], vars_dict["t+1"]["u"], vars_dict["t+1"]["v"]
 
-    # --- 상수 추출 ---
+    # --- Extract constants ---
     B = input_denorm[0,17,:,:] 
     sin_theta = torch.sin(torch.deg2rad(torch.tensor(theta, device="cuda")))
     cos_theta = torch.cos(torch.deg2rad(torch.tensor(theta, device="cuda")))
@@ -238,7 +239,7 @@ def compute_momentum_loss_2d_spatial(input, label,
     up, down, left, right = h_t[:-2,1:-1], h_t[2:,1:-1], h_t[1:-1,:-2], h_t[1:-1,2:]
     h_threshold = 0.01
     mask_freesurface = ((up > h_threshold) & (down > h_threshold) & (left > h_threshold) & (right > h_threshold)).int()
-    mask_freesurface = crop_to_594x594(mask_freesurface.float()).int()  # (594, 594) 크기로 변환
+    mask_freesurface = crop_to_594x594(mask_freesurface.float()).int()
 
     dhB_dxi  = torch.clamp((hB[:,2:] - hB[:,:-2]) / (2 * dxi), -10, 10)
     dhB_deta = torch.clamp((hB[2:,:] - hB[:-2,:]) / (2 * deta), -10, 10)
@@ -269,7 +270,7 @@ def compute_momentum_loss_2d_spatial(input, label,
     x_loss_2d = torch.abs(x_physics_loss)
     y_loss_2d = torch.abs(y_physics_loss)
 
-    # --- 각 항별로 개별 저장 (x momentum) ---
+    # --- Save each x-momentum term separately ---
     x_abs_dhu_dt = torch.abs(dhu_dt)
     x_abs_dhu2_dx = torch.abs(dhu2_dx)
     x_abs_dhuv_dy = torch.abs(dhuv_dy)
