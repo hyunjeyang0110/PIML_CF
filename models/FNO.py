@@ -26,7 +26,6 @@ class SpectralConv2d(nn.Module):
 
     def compl_mul2d(self, input, weights_real, weights_imag):
         # (B, C_in, H, W) · (C_in, C_out, H, W) → (B, C_out, H, W)
-        # 채널 방향(c)에 대해 내적하고, 공간 축(H,W)은 그대로 유지한다.
         real = torch.einsum("bchw,cohw->bohw", input.real, weights_real) - \
                torch.einsum("bchw,cohw->bohw", input.imag, weights_imag)
 
@@ -78,10 +77,10 @@ class FNOBlock(nn.Module):
 
 
 ######################################################################
-# 3) FNO 2D: backbone 모델
+# 3) FNO 2D: backbone
 ######################################################################
 
-class FNO2D(nn.Module):
+class FNO(nn.Module):
     """
     Full Fourier Neural Operator for 2D PDE surrogate modeling.
     input  : [B, 19, 596, 596]

@@ -8,8 +8,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# 🚩 Changes made in Yang et al.
 
-# 🚩🚩 직접 수정한 부분
 
 from __future__ import annotations
 
@@ -112,7 +112,7 @@ class SwinUNETR(nn.Module):
         if spatial_dims not in (2, 3):
             raise ValueError("spatial dimension should be 2 or 3.")
 
-        # 🚩🚩 Size validation relaxed - forward() will auto-pad if needed for 2D
+        # 🚩 Size validation relaxed - forward() will auto-pad if needed for 2D
         # Original validation commented out to allow sizes like 596x596
         # for m, p in zip(img_size, patch_size):
         #     for i in range(5):
@@ -306,7 +306,7 @@ class SwinUNETR(nn.Module):
 
 
     def forward(self, x_in):
-        # 🚩🚩 Store original size for 2D case
+        # 🚩 Store original size for 2D case
         original_size = None
         if len(x_in.shape) == 4:  # 2D: [B, C, H, W]
             b, c, h, w = x_in.shape
@@ -331,17 +331,15 @@ class SwinUNETR(nn.Module):
         out = self.decoder1(dec0, enc0)
         logits = self.out(out)
 
-        # channel 0: depth (must be positive)
+        # 🚩 channel 0: depth (must be positive)
         logits[:, 0:1, :, :] = F.relu(logits[:, 0:1, :, :])
         
-        # 🚩🚩 Crop to original size if padding was applied
+        # 🚩 Crop to original size if padding was applied
         if original_size is not None:
             h, w = original_size
             logits = logits[:, :, :h, :w]
         
         return logits
-
-
 
 
 

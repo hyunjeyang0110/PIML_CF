@@ -1,14 +1,7 @@
 import torch
 import torch.nn.functional as F
 
-# ==========================
-# Helper function
-# ==========================
 def crop_to_594x594(tensor: torch.Tensor) -> torch.Tensor:
-    """
-    입력 tensor의 shape이 (596,596), (596,594), (594,596) 중 하나일 때
-    양 끝을 잘라내어 항상 (594,594) 크기의 tensor를 반환한다.
-    """
     h, w = tensor.shape[-2], tensor.shape[-1]
 
     if h == 596:
@@ -23,7 +16,7 @@ def crop_to_594x594(tensor: torch.Tensor) -> torch.Tensor:
 
     return tensor
 
-fn_denorm2 = lambda x, min, max: (x * (max-min)) + min # MinMax scaling에서 Normalization한 데이터를 원래의 스케일로 되돌리는 함수. 
+fn_denorm2 = lambda x, min, max: (x * (max-min)) + min
 
 # ==========================
 # Main function
@@ -34,29 +27,16 @@ def compute_momentum_loss(input, label,
                           center_idx, n_gpu,
                           dt=3600, theta=35, dxi=200, deta=200,
                           g=9.81, rho=1024, rho_a=1.25):
-    """
-    input, label (추후 output으로 대체 가능)과 scaling 정보, center_idx를 받아서
-    x_momentum_loss, y_momentum_loss를 반환하는 함수
-    """
-
     '''
-    여기서는 label과 input에 대한 정보가 들어와야 연산이 가능하다. // 실제로 이 함수의 입력인자는: input, label이겠지만, 추후에 label대신에 output (predicted value)을 넣어주면 된다. 
-    현재는 center_idx를 넣어주고 1개에 대한 정보만을 계산하는데, 이제는 mini-batch size가 정해지면 (ex.6), 6-2인 4번에 대한 physics loss를 계산해서 값을 도출해 주어야 한다. 
-    center_idx를 4번 돌아가면서 해준다. 
-    우선 center_idx를 넣어주는 def하나 만들고, 그로 인한 for loop를 추가한 def를 하나 더 만들어 준다. 
-    n_gpu는 manning n을 gpu에 넣은 것이다. 
-    
-    필요한 정보들: input, label (추후 output을 넣어주면됨), input_min_gpu, input_max_gpu, output_min_gpu, output_max_gpu, center_idx, n_gpu 
-
     # Global parameters ======
     dt = 3600
-    theta = 35 # 단위는 도
+    theta = 35
     dxi = 200
     deta = 200
-    g = 9.81 # m/s^2
-    rho = 1024 # 물의 밀도 약 1000 kg/m^3; 해수의 경우 1025 kg/m^3 / SFINCS에서는 rho는 1024, rhoa는 1.25를 사용하고 있다 / ref:https://sfincs.readthedocs.io/en/latest/parameters.html?utm_source=chatgpt.com
-    rho_a= 1.25 # rho_a : 공기 밀도 [kg/m^3], 보통 1.225 at sea level, 섭씨 15도
-    #Cd = 0.002 # Cd : 항력 계수 (1.3e-3 ~ 2.6e-3) / 우리는 아래에 변동 Cd계수를 U speed에 따라서 적용해 준다 / SFINCS에서는 0–28 m/s일 때 0.001 / 28–50 m/s일 때 0.0025 / 50 m/s 이상일 때 0.0015 / ref:https://sfincs.readthedocs.io/en/latest/parameters.html?utm_source=chatgpt.com
+    g = 9.81
+    rho = 1024 # in SFINCS rho=1024, rhoa= 1.25 / ref:https://sfincs.readthedocs.io/en/latest/parameters.html
+    rho_a= 1.25 
+    #Cd = 0.002 # in SFINCS: In SFINCS, Cd is defined as a piecewise function of wind speed: 0.001 (<28 m/s), 0.0025 (28~50 m/s), 0.0015 (>50 m/s)
     '''
 
     # --- Denormalize ---
@@ -132,8 +112,8 @@ def compute_momentum_loss(input, label,
     y_physics_loss = dhv_dt + dhuv_dx + dhv2_dy + ghdhB_dy + tauby_rho - tauwy_rho
 
     # --- Momentum equation loss ---
-    x_momentum_loss = torch.log1p(x_physics_loss.pow(2).mean())
-    y_momentum_loss = torch.log1p(y_physics_loss.pow(2).mean())
+    x_momentum_loss = x_physics_loss.pow(2).mean()
+    y_momentum_loss = y_physics_loss.pow(2).mean()
 
     # ----------------------------------
     # --- Mass conservation equation ---
@@ -163,7 +143,7 @@ def compute_momentum_loss(input, label,
     mass_physics_loss = F.relu(dh_dt + dHu_dx + dHv_dy - S_mn)
 
     # --- Mass equation loss ---
-    mass_loss = torch.log1p(mass_physics_loss.pow(2).mean())
+    mass_loss = mass_physics_loss.pow(2).mean()
 
     return mass_loss, x_momentum_loss, y_momentum_loss
 

@@ -34,7 +34,7 @@ class ConvLSTMCell(nn.Module):
 
         return h_next, c_next
 
-class ConvLSTM(nn.Module):
+class ConvLSTMEncoder(nn.Module):
     def __init__(self, input_dim, hidden_dim):
         super().__init__()
         self.hidden_dim = hidden_dim
@@ -74,12 +74,12 @@ class SimpleCNNHead(nn.Module):
         return x
 
 
-class FloodConvLSTMModel(nn.Module):
+class ConvLSTM(nn.Module):
     def __init__(self, hidden_dim=32):
         super().__init__()
 
         # ConvLSTM: input_dim = 5 (h,u,v,bathy,n)
-        self.convlstm = ConvLSTM(input_dim=5, hidden_dim=hidden_dim)
+        self.convlstm = ConvLSTMEncoder(input_dim=5, hidden_dim=hidden_dim)
 
         # CNN head: receives ConvLSTM_output + 5 forcing channels
         self.cnn_head = SimpleCNNHead(in_channels=hidden_dim + 5,
