@@ -42,14 +42,16 @@ This repository provides deep learning model architectures and implementation co
 
 $$
 r_u(x,y,t)=\partial_t(hu)+\nabla\cdot(hu\mathbf{u})+gh\partial_x(H)-\frac{\tau_{w,x}-\tau_{b,x}}{\rho}
+\tag{1}
 $$
 
 $$
 r_v(x, y, t) = \partial_t (hv) + \nabla \cdot (hv\vec{v}) + gh\partial_y(H) - \frac{\tau_{w,y} - \tau_{b,y}}{\rho}
+\tag{2}
 $$
 
 $$
-r_m(x, y, t) = {ReLU}\left(\partial_t h + \partial_x(Hu) + \partial_y(Hv) - (P + D)\right)
+rm​(x,y,t) = ReLU(∂t​h+∂x​(Hu)+∂y​(Hv)−(P+D))
 \tag{3}
 $$
 
