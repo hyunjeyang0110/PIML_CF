@@ -8,19 +8,15 @@ This repository provides deep learning model architectures and implementation co
   <img src="figures/PIML_CF overview.png" width="800">
 </p>
 
-
 ## We investigate:
 - **Where** PIML improves predictions: spatial patterns of model improvement
 - **When** PIML improvements occur: temporal dynamics of predictive enhancement
 - **How** physics constraints improve model behavior: mechanisms underlying physically consistent predictions
 
-
-## Key Features
-- Physics-informed deep learning (PIML)
-- ConvLSTM-based spatiotemporal modeling
-- Finite-difference-based physics residuals
-- Event-based training and OOD evaluation (Hurricane Ike)
-- Ablation study on physics constraints
+## Key Points
+> •	Physics-informed machine learning improves hurricane-induced compound flooding predictions in a spatiotemporally heterogeneous manner, particularly in hydrodynamically active regions and around peak flooding conditions
+> •	Physics constraints suppress non-physical amplification, improving physical consistency and prediction stability
+> •	Momentum constraints are the dominant contributor to the performance improvement, and PIML shows increasing predictive advantages under limited training data conditions
 
 ## Main Findings
 - PIML improves both accuracy and physical consistency
@@ -38,8 +34,8 @@ This repository provides deep learning model architectures and implementation co
 - Static: bathymetry, Manning’s n
 
 **Output:**
-- Water depth (h)
-- Velocity (u, v)
+- Water depth (h) at t+1
+- Velocity (u, v) at t+1
 
 ## Method
 - Governing equations: Simplified Shallow Water Equations (SSWEs)
@@ -57,3 +53,10 @@ This repository provides deep learning model architectures and implementation co
 - ConvLSTM
 - SwinUNETR
 - FNO
+
+
+# Meta
+
+Hyunje Yang – hyunjeyang@utexas.edu
+
+Distributed under the Creative Commons Legal Code CC0 1.0 Universal. See ``LICENSE`` for more information.
