@@ -53,6 +53,11 @@ r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (Hu) + \partial_y (H
 $$
 
 - Discretization: Finite Difference Method (FDM)
+
+$$r_v(x, y, t) = \partial_t (hv) + \nabla \cdot (hv\vec{v}) + gh\partial_y(H) - \frac{\tau_{w,y} - \tau_{b,y}}{\rho}$$
+
+$$r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (hu) + \partial_y (hv) - (P + D) \right)$$
+
 - Total Loss:
   - Data loss (MSE)
   - Physics loss (SSWEs residuals)
