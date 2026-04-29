@@ -145,7 +145,7 @@ from models.FNO import FNO
 # ----------------------------------------------------------------------
 lr = 1e-3
 batch_size = 6
-num_epoch = 10
+num_epoch = 2000
 
 # loss weight initialization
 data_loss_weight = 1
