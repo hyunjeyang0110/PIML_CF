@@ -49,7 +49,7 @@ r_v(x, y, t) = \partial_t (hv) + \nabla \cdot (hv\vec{v}) + gh\partial_y(H) - \f
 $$
 
 $$
-rm​(x,y,t) = ReLU(∂t​h+∂x​(Hu)+∂y​(Hv)−(P+D))
+r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (hu) + \partial_y (hv) - (P + D) \right)
 $$
 
 $$
