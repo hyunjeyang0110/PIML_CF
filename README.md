@@ -19,8 +19,14 @@ This repository provides deep learning model architectures and implementation co
 -	Momentum constraints are the dominant contributor to the performance improvement, and PIML shows increasing predictive advantages under limited training data conditions
 
 <p align="center">
-  <img src="figures/Spatiotemporal Distribution of PIML Performance Improvement.png" width="800"><br>
-  Spatiotemporal comparison of predictive performance between the PIML and PDD models. The upper left plot shows the time series of domain-averaged water depth RMSE difference (PDD − PIML), where the solid line represents the mean across runs and the shaded region denotes the interquartile range (IQR; 25th–75th percentile). Grey shaded bands indicate selected time windows for spatial analysis relative to landfall (t = 0). The remaining plots illustrate spatial distributions of absolute error differences at selected time steps. Positive values (shown in blue) indicate regions where PIML improves predictive performance compared to the PDD model, while negative values (shown in red) indicate degraded performance. The largest improvements occur near landfall, highlighting the enhanced effectiveness of PIML under peak flooding conditions.
+  <img src="figures/Spatiotemporal_PIML_Improvement.png" width="800"><br>
+  <b>Figure 1.</b> Spatiotemporal comparison of predictive performance between PIML and PDD. 
+  The upper-left panel shows the time series of domain-averaged water depth RMSE difference (PDD − PIML), 
+  where the solid line indicates the mean and the shaded region represents the interquartile range. 
+  Grey bands denote selected time windows relative to landfall (t = 0). 
+  The remaining panels show spatial distributions of error differences at selected times. 
+  Positive values (blue) indicate improvement by PIML, while negative values (red) indicate degradation. 
+  Improvements are most pronounced near landfall.
 </p>
 
 
