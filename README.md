@@ -52,14 +52,14 @@ $$
 r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (Hu) + \partial_y (Hv) - (P + D) \right)
 $$
 
-$$
-\mathcal{L}_{\text{Total}} = \lambda_u \langle r_u^2 \rangle + \lambda_v \langle r_v^2 \rangle + \lambda_m \langle r_m^2 \rangle + \lambda_d \mathcal{L}_{\text{data}}
-$$
-
 - Discretization: Finite Difference Method (FDM)
 - Total Loss:
   - Data loss (MSE)
   - Physics loss (SSWEs residuals)
+
+$$
+\mathcal{L}_{\text{Total}} = \lambda_u \langle r_u^2 \rangle + \lambda_v \langle r_v^2 \rangle + \lambda_m \langle r_m^2 \rangle + \lambda_d \mathcal{L}_{\text{data}}
+$$
 
 ## Deep Learning Architectures Tested
 - UNet
