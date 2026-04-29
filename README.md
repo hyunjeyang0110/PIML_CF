@@ -1,5 +1,5 @@
 # PIML_CF
-> Physics-Informed Deep Learning for Hurricane-Induced Compound Flooding Prediction
+Physics-Informed Deep Learning for Hurricane-Induced Compound Flooding Prediction
 
 ## Overview
 This repository provides deep learning model architectures and implementation code for compound flooding prediction, integrating physical constraints based on the simplified shallow water equations (SSWEs).
@@ -52,7 +52,7 @@ $$
 r_m(x, y, t) = \text{ReLU} \left( \partial_t h + \partial_x (Hu) + \partial_y (Hv) - (P + D) \right)
 $$
 
-- Discretization: Finite Difference Method (FDM)
+- Discretization: finite difference method (FDM)
 
 $$\left. \frac{\partial \phi}{\partial t} \right|_t = \frac{\phi^{t+1} - \phi^{t-1}}{2\Delta t}$$
 
@@ -60,7 +60,7 @@ $$\left. \frac{\partial \phi}{\partial \xi} \right|_{i,j} = \frac{\phi_{i,j+1} -
 
 $$\left. \frac{\partial \phi}{\partial \eta} \right|_{i,j} = \frac{\phi_{i+1,j} - \phi_{i-1,j}}{2\Delta \eta}$$
 
-- Total Loss:
+- Total loss:
   - Data loss (MSE)
   - Physics loss (SSWEs residuals)
 
