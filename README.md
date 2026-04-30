@@ -8,8 +8,8 @@ This repository provides deep learning model architectures and implementation co
 </p>
 
 ## We Investigate
-- **_Where_** PIML improves predictions: spatial patterns of performance gains.
-- **_When_** improvements occur: temporal evolution of model peroformance.
+- **_Where_** PIML improves predictions: spatial patterns of performance enhancement.
+- **_When_** improvements occur: temporal evolution of model performance.
 - **_How_** physics constraints influence model behavior: mechanisms underlying physically consistent predictions.
 
 ## Key Points
