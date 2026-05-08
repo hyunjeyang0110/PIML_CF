@@ -15,7 +15,7 @@ This repository provides deep learning model architectures and implementation co
 ## Key Points
 -	Physics-informed machine learning improves hurricane-induced compound flooding predictions in a spatiotemporally heterogeneous manner, particularly in hydrodynamically active regions and around peak flooding conditions
 -	Physics constraints suppress spurious overestimation of water depth, improving physical consistency and prediction robustness
--	Momentum constraints are the dominant contributor to the performance enhancements, and PIML shows increasing predictive advantages under limited training data conditions
+-	The contribution of physics constraints varies across hydrodynamic regimes, and PIML shows increasing predictive advantages under limited training data conditions
 
 <p align="center">
   <img src="figures/Spatiotemporal Distribution of PIML Performance Improvement.png" width="700">
